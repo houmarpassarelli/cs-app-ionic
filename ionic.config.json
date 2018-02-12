@@ -1,6 +1,6 @@
 {
   "name": "CupomstoreFB",
-  "app_id": "",
+  "app_id": "1153f028",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}

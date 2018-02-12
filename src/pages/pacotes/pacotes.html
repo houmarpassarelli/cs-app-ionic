@@ -1,0 +1,9 @@
+<ion-header>
+  <ion-navbar></ion-navbar>
+</ion-header>
+<ion-content padding>
+  <button ion-button icon-left *ngFor="let pacote of pacotes">
+    <i class="fa fa-ticket fa-3x"></i>
+    {{pacote.titulo}}
+  </button>
+</ion-content>
