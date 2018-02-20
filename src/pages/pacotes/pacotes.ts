@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { LoadingController } from 'ionic-angular/components/loading/loading-controller';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { LoadingController } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
+import { PacoteProvider } from './../../providers/pacote/pacote.service';
+import 'rxjs/operators/map';
 
 @IonicPage()
 @Component({
@@ -21,15 +22,18 @@ export class PacotesPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public loadingCtrl: LoadingController,
-              private db: AngularFireDatabase) {
+              private pacoteService: PacoteProvider) {
     
               this.loading.present();
 
   }
 
-  ionViewWillEnter(){
-    this.pacotes = this.db.list(`/pacote`).snapshotChanges().map(res => {
-      return res.map(valores => ({key : valores.payload.key, ... valores.payload.val()}));
-    });
+  ionViewDidLoad(){
+    this.pacotes = this.pacoteService.retrieveAll().map((dados) => { this.loading.dismiss();return dados;});
+  }
+
+
+  verPacote(id: string): void{
+    this.navCtrl.push('', {id: id});
   }
 }

@@ -6,6 +6,9 @@ import { UsuarioService } from '../../providers/usuario/usuario.service';
 import { LoginPage } from '../login/login';
 import { Observable } from 'rxjs/Observable';
 import { InsertPage } from '../insert/insert';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { AutenticacaoService } from '../../providers/autenticacao/autenticacao.service';
+import { PacotesPage } from '../pacotes/pacotes';
 
 @Component({
   selector: 'page-home',
@@ -15,12 +18,26 @@ export class HomePage {
 
   private usuarios : Observable<any>;
 
-  constructor(public navCtrl: NavController, private db: AngularFireDatabase, public usuarioService : UsuarioService) {}
+  constructor(public navCtrl: NavController, 
+              private db: AngularFireDatabase, 
+              public usuarioService : UsuarioService, 
+              private auth: AngularFireAuth, 
+              public autenticacao: AutenticacaoService) {}
+
+  ionViewWillEnter(): void{
+    console.log('will enter');
+  }
 
   ionViewDidLoad(){
+    console.log('loaded');
+    console.log(this.auth.authState);
+    // console.log(this.auth.auth.currentUser);
     this.usuarios = this.db.list(`/usuario`).snapshotChanges().map(res => {
       return res.map(valores => ({key : valores.payload.key, ... valores.payload.val()}))
     });
+  }
+  ionViewDidEnter(): void{
+    console.log('enter');
   }
 
   cadastro(): void{
@@ -37,5 +54,21 @@ export class HomePage {
 
   login(): void{
     this.navCtrl.setRoot(LoginPage);
+  }
+
+  meusCupoms(): void{
+
+  }
+
+  pacotes(): void{
+    this.navCtrl.push(PacotesPage);
+  }
+
+  logout(): void{
+    this.autenticacao.logOut().then(() => {
+      this.navCtrl.setRoot(LoginPage);
+    }).catch(()=> {
+      console.error('erro ao deslogar');
+    })
   }
 }

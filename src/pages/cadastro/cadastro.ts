@@ -57,15 +57,18 @@ export class CadastroPage {
 
           delete formData.senha;
           delete formData.repeat;
-          formData.uid = authres.uid;
-
-          this.usuarioService.create(formData).then((response) => {
+          
+          this.usuarioService.create(authres.uid, formData).then(response => {
             loading.dismiss();
-            if(response)this.navCtrl.setRoot(PacotesPage);
-          }).catch((error) => {
+            this.navCtrl.setRoot(PacotesPage);
+          }, reject => {
             loading.dismiss();
-            if(!error)this.alerta('Não Realizado','Não foi possível realizar seu cadastro. Por favor contate o suporte.','Voltar','login');
+            this.alerta('Não Realizado','Não foi possível realizar seu cadastro. Por favor contate o suporte.','Voltar','login');
+          }).catch(error => {
+            loading.dismiss();
+            this.alerta('Não Realizado','Não foi possível realizar seu cadastro. Por favor contate o suporte.','Voltar','login');
           });
+
         }).catch((error) => {
           loading.dismiss();
           switch(error.code){

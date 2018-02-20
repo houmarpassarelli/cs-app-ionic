@@ -1,12 +1,16 @@
-import { Observable } from 'rxjs/Observable';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import { CadastroPage } from '../cadastro/cadastro';
 import { AutenticacaoService } from '../../providers/autenticacao/autenticacao.service';
 import { PacotesPage } from '../pacotes/pacotes';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument} from 'angularfire2/firestore';
 import { MeuscuponsPage } from './../meuscupons/meuscupons';
-import { AngularFireObject } from 'angularfire2/database/interfaces';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import { HomePage } from '../home/home';
+import { AngularFireAuth } from 'angularfire2/auth';
+
 // import { ReactiveFormsModule, Validators, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
@@ -27,12 +31,15 @@ export class LoginPage {
               private autenticacao: AutenticacaoService,
               public alertaCtrl : AlertController,
               public loadingCtrl: LoadingController,
-              private db : AngularFireDatabase
-            ){
-              
-            }
+              private db : AngularFireDatabase,
+              private auth: AngularFireAuth
+            ){}
 
-  novoCadastro(){
+  ionViewDidLoad():void{
+    console.log(this.auth.auth.currentUser);
+  }
+
+  novoCadastro(){    
     this.navCtrl.push(CadastroPage, {}, {'animation' : 'ios-transition'});
   }
 
@@ -44,14 +51,16 @@ export class LoginPage {
     });      
     loading.present();
 
-    this.autenticacao.loginWithEmail({email: this.login.email, senha: this.login.senha}).then((response) => {      
-      this.db.list('/usuario', ref=> ref.orderByChild('uid').equalTo(response.user.uid)).snapshotChanges().subscribe(res =>{
-          res.map(valor => {
-            loading.dismiss();
-            if(valor.payload.val().pacote == undefined)this.navCtrl.setRoot(PacotesPage);
-            else this.navCtrl.setRoot(MeuscuponsPage);
-          });
-      });        
+    this.autenticacao.loginWithEmail({email: this.login.email, senha: this.login.senha}).then((response) => {
+      loading.dismiss();
+      this.navCtrl.setRoot(HomePage);
+      // this.db.list('/usuario', ref=> ref.orderByChild('uid').equalTo(response.user.uid)).snapshotChanges().subscribe(res =>{
+      //     res.map(valor => {
+      //       loading.dismiss();
+      //       if(valor.payload.val().pacote == undefined)this.navCtrl.setRoot(PacotesPage);
+      //       else this.navCtrl.setRoot(MeuscuponsPage);
+      //     });
+      // });        
     }, (reject) => {
       loading.dismiss();
       switch(reject.code){

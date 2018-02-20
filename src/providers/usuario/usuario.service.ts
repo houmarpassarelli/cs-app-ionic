@@ -1,20 +1,15 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList} from 'angularfire2/database';
-import { Usuario } from '../../models/usuario.model';
+import { AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 
 @Injectable()
 export class UsuarioService {  
 
-  private usuarios: AngularFireList<Usuario>
+  constructor(/*public db: AngularFireDatabase,*/
+              private db: AngularFirestore){}
 
-  constructor(public db: AngularFireDatabase){
-    this.usuarios = this.db.list(`/usuario`);
-  }
-
-  create(usuario: Usuario): Promise<any>{
+  create(uid: string, dados: Object): Promise<any>{
       
-      return this.db.object(`/usuario/${usuario.uid}`).set(usuario).then(__=> {return true;}).catch(__=> {return false;});    
-      
+      return this.db.collection('usuario').doc(uid).set(dados);
   }
 
 }
