@@ -24,6 +24,7 @@ import { CupomProvider } from '../providers/cupom/cupom.service';
 import { EstabelecimentoProvider } from '../providers/estabelecimento/estabelecimento.service';
 import { SegmentoProvider } from '../providers/segmento/segmento.service';
 import { CategoriaProvider } from '../providers/categoria/categoria.service';
+import { CuponsPage } from './../pages/cupons/cupons';
 
 // import * as firebase from 'firebase';
 
@@ -45,7 +46,8 @@ const firebaseConfig: FirebaseAppConfig = {
     HomePage,
     PacotesPage,
     MeuscuponsPage,
-    InsertPage
+    InsertPage,
+    CuponsPage
   ],
   imports: [
     AngularFireModule.initializeApp(firebaseConfig),
@@ -65,7 +67,8 @@ const firebaseConfig: FirebaseAppConfig = {
     HomePage,
     PacotesPage,
     MeuscuponsPage,
-    InsertPage
+    InsertPage,
+    CuponsPage
   ],
   providers: [
     StatusBar,
